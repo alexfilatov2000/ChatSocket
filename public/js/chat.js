@@ -1,4 +1,4 @@
-let socket = io.connect('https://chatfilatov.herokuapp.com');
+let socket = io();
 
 // Query DOM
 let message = document.getElementById('message'),

@@ -1,5 +1,4 @@
 const express = require('express');
-const http = require('http');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -8,11 +7,12 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const config = require('./config/database');
 
-const app = express();
-const server = http.createServer(app);
-const io = require('socket.io').listen(server);
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3003;
+
 
 mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -70,16 +70,16 @@ app.get('*', function (req, res, next) {
 });
 
 app.get('/', function (req, res) {
-    // Chat.find({}, function (err, response) {
-    //     if (err){
-    //         console.log(err);
-    //     }  else {
-    //
-    //         res.render('index', {
-    //             chats: response
-    //         });
-    //     }
-    // });
+    Chat.find({}, function (err, response) {
+        if (err){
+            console.log(err);
+        }  else {
+
+            res.render('index', {
+                chats: response
+            });
+        }
+    });
 });
 
 //routes
