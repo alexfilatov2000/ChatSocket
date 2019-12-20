@@ -70,16 +70,16 @@ app.get('*', function (req, res, next) {
 });
 
 app.get('/', function (req, res) {
-    Chat.find({}, function (err, response) {
-        if (err){
-            console.log(err);
-        }  else {
-
-            res.render('index', {
-                chats: response
-            });
-        }
-    });
+    // Chat.find({}, function (err, response) {
+    //     if (err){
+    //         console.log(err);
+    //     }  else {
+    //
+    //         res.render('index', {
+    //             chats: response
+    //         });
+    //     }
+    // });
 });
 
 //routes
