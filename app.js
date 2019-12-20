@@ -1,4 +1,5 @@
 const express = require('express');
+const http = require('http');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -7,10 +8,9 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const config = require('./config/database');
 
-const app = require('express');
-//const server = require('http').createServer(app);
-//const io = require('socket.io')(server);
-const io = socketIO(app);
+const app = express();
+const server = http.createServer(app);
+const io = require('socket.io').listen(server);
 
 const PORT = process.env.PORT || 3003;
 
@@ -87,7 +87,6 @@ let users = require('./routes/users');
 app.use('/users', users);
 
 //Socket
-
 conections = [];
 
 io.on('connection', function (socket) {
@@ -129,4 +128,5 @@ io.on('connection', function (socket) {
     });
 });
 
-app.listen(PORT);
+server.listen(PORT);
+
