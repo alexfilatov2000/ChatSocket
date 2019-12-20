@@ -7,10 +7,12 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const config = require('./config/database');
 
-const app = require('express')();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const app = require('express');
+//const server = require('http').createServer(app);
+//const io = require('socket.io')(server);
+const io = socketIO(app);
 
+const PORT = process.env.PORT || 3003;
 
 mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -127,4 +129,4 @@ io.on('connection', function (socket) {
     });
 });
 
-server.listen(process.env.PORT || 3003);
+server.listen(PORT);
