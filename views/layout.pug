@@ -1,0 +1,32 @@
+doctype html
+html
+    head
+        title= title
+        link(rel='stylesheet', href='/css/style.css')
+        link(rel='stylesheet', href='/css/message.css')
+        link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.css')
+        script(src='socket.io/socket.io.js')
+    body
+        nav.navbar.navbar-expand-md.navbar-dark.bg-dark
+            a.navbar-brand(href='#') Navbar
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+            #navbarsExampleDefault.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a.nav-link(href='/') Home
+                ul.navbar-nav.navbar-right
+                    if user
+                        li
+                            a.nav-link(href='/users/logout/') Logout
+                    else
+                        li.nav-item
+                            a.nav-link(href='/users/register/') Register
+                        li.nav-item
+                            a.nav-link(href='/users/login/') Login
+
+        .container
+            != messages('message', locals)
+            block content
+            script(src='/jquery/dist/jquery.js')
+            script(src='/js/chat.js')
