@@ -1,3 +1,4 @@
+//let socket = io('http://localhost:3003');
 let socket = io();
 
 // Query DOM

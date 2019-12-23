@@ -59,6 +59,7 @@ router.get('/login', function (req, res) {
 });
 
 router.post('/login', function (req, res, next) {
+    req.session.username = req.body.username;
     passport.authenticate('local', { successRedirect: '/',
         failureRedirect: '/users/login',
         failureFlash: true })(req, res, next);
@@ -66,7 +67,6 @@ router.post('/login', function (req, res, next) {
 });
 
 router.get('/logout', function (req, res) {
-    session.myuser = 'incognito';
     req.logout();
     req.flash('success', 'You are logged out');
     res.redirect('/users/login')

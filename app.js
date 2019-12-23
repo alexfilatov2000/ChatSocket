@@ -6,15 +6,16 @@ const  passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const config = require('./config/database');
+const MongoStore = require('connect-mongo')(session);
 
 const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-const PORT = process.env.PORT || 3003;
+const port = process.env.PORT || 3003;
 
 
-mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true});
 
 //process.env.MONGODB_URI
 //mongodb://localhost:27017/
@@ -43,12 +44,31 @@ app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+
+
 //express session
-app.use(session({
-    secret: 'keyboard cat',
+// app.use(session({
+//     store: new MongoStore({ mongooseConnection: mongoose.connection }),
+//     resave: true,
+//     secret: 'keyboard cat',
+//     saveUninitialized: true
+// }));
+
+
+var sessionMiddleware = session({
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     resave: true,
-    saveUninitialized: true,
-}));
+    secret: 'keyboard cat',
+    saveUninitialized: true
+});
+
+io.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
+
+app.use(sessionMiddleware);
+
+
 
 //express messages midleware
 app.use(require('connect-flash')());
@@ -69,7 +89,10 @@ app.get('*', function (req, res, next) {
     next();
 });
 
+
+
 app.get('/', function (req, res) {
+    console.log(req.session.usernam);
     Chat.find({}, function (err, response) {
         if (err){
             console.log(err);
@@ -88,7 +111,6 @@ app.use('/users', users);
 
 //Socket
 conections = [];
-
 io.on('connection', function (socket) {
     console.log('Успешное Соединение', socket.id);
     conections.push(socket);
@@ -100,8 +122,8 @@ io.on('connection', function (socket) {
 
 
     socket.on('chat', function(data){
-        if (session.myuser){
-            data.user = session.myuser;
+        if (socket.request.session.username){
+            data.user = socket.request.session.username;
         } else {
             data.user = 'incognito';
         }
@@ -128,5 +150,6 @@ io.on('connection', function (socket) {
     });
 });
 
-server.listen(PORT);
+
+server.listen(port);
 

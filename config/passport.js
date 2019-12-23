@@ -14,8 +14,7 @@ module.exports = function (passport) {
                 return done(null, false, {message: 'User not found'});
             }
 
-            session.myuser = username;
-            console.log(username);
+            //session.myuser = username;
 
             //Match password
             bcrypt.compare(password, user.password, function (err, isMatch) {
