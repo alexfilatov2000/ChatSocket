@@ -15,6 +15,7 @@ module.exports = function (passport) {
             }
 
             session.myuser = username;
+            console.log(username);
 
             //Match password
             bcrypt.compare(password, user.password, function (err, isMatch) {
@@ -28,6 +29,7 @@ module.exports = function (passport) {
         })
     }));
     passport.serializeUser(function(user, done) {
+        console.log("serializeUser", user);
         done(null, user.id);
     });
 
